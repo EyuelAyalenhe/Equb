@@ -1,0 +1,246 @@
+<html>
+
+<head>
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Roboto');
+
+        /* Global styles */
+        body {
+            background-image: url(wave-haikei.svg);
+            background-repeat: no-repeat;
+            background-size:cover;
+            background-attachment: fixed;
+            font-family: 'Roboto', sans-serif;
+            font-size: 16px;
+            line-height: 1.5;
+            color: #333;
+            background-color: #fff;
+            }
+
+        h1 {
+            font-size: 24px;
+            margin-top: 0;
+            margin-bottom: 16px;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0;
+            margin-bottom: 16px;
+        }
+
+        nav h1 {
+            align-items: center;
+            color: white;
+            font-size: 24px;
+            margin: 0;
+        }
+
+
+        /* Form styles */
+        form {
+            margin: 20px;
+            color: #ffffff;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            outline: none;
+        }
+
+        input[type="text"]:focus {
+            background-color: #f1f1f1;
+        }
+
+        input[type="button"] {
+            width: 100%;
+            background-color: green;
+            color: beige;
+            padding: 12px 20px;
+            margin: 8px 0;
+            box-sizing: border-box;
+            border: none;
+            /* Changed this to remove the border */
+        }
+
+        input[type="button"]:hover {
+            background-color: #555;
+            /* Changed this to make the button darker on hover */
+        }
+
+        .register-button {
+            background-color: #000;
+            /* Changed this to make the register button black */
+            color: #fff;
+            /* Changed this to make the register button text white */
+            font-size: 16px;
+            /* Changed this to make the register button text bigger */
+            border-radius: 4px;
+            /* Changed this to make the register button rounded */
+        }
+
+        .register-button:hover {
+            background-color: #555;
+            /* Changed this to make the register button darker on hover */
+        }
+
+        .winner-button {
+            background-color: #f44336;
+            /* Changed this to make the winner button red */
+            color: #fff;
+            /* Changed this to make the winner button text white */
+            font-size: 16px;
+            /* Changed this to make the winner button text bigger */
+            border-radius: 4px;
+            /* Changed this to make the winner button rounded */
+        }
+
+        .winner-button:hover {
+            background-color: #ff6666;
+            /* Changed this to make the winner button lighter on hover */
+        }
+
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            color: #ffffff;
+        }
+
+        th,
+        td {
+            padding: 8px;
+            text-align: left;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+
+        #winner {
+            font-size: 20px;
+            color: green;
+        }
+
+        /* Responsive styles */
+
+        @media (max-width:768px) {
+            h1 {
+                font-size: 20px;
+            }
+
+            input[type="button"] {
+                padding: 8px, 16px;
+            }
+
+            form,
+            table {
+                /* Added these selectors to apply flexbox layout to form and table elements */
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                flex-wrap: no-wrap;
+                width: auto;
+                /* Changed this to make the form and table elements adjust their width according to their content */
+                margin: auto;
+                /* Changed this to center the form and table elements horizontally */
+                max-width: none;
+                /* Removed the max-width constraint for smaller screens */
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <h1>Equb</h1>
+    </nav>
+    <div style="display:flex"> <!-- Added a div element with flexbox layout to wrap the form and table elements -->
+        <form>
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" />
+            <label for="amount">Amount:</label>
+            <input type="text" id="amount" name="amount" />
+            <input type="button" value="Register" onclick="addRow()" class="register-button" />
+            <!-- Added a class attribute for styling -->
+        </form>
+        <table id="table">
+            <tr>
+                <th>Name</th>
+                <th>Amount</th>
+            </tr>
+        </table>
+    </div> <!-- Closed the div element -->
+    <input type="button" value="Pick a winner" onclick="pickWinner()" class="winner-button" />
+    <!-- Added a class attribute for styling -->
+    <p id="winner"></p>
+</body>
+<script>
+    // Function to validate the input fields
+    function validate() {
+        var name = document.getElementById("name").value;
+        var amount = document.getElementById("amount").value;
+        if (name == "" || amount == "") {
+            alert("Please enter your name and amount.");
+            return false;
+        }
+        if (isNaN(amount)) {
+            alert("Please enter a valid number for amount.");
+            return false;
+        }
+        if (amount < 200) {
+            alert("Please enter an amount of at least 1500 dollars.");
+            return false;
+        }
+        return true;
+    }
+
+    // Function to add a new row to the table with the input values
+    function addRow() {
+        if (validate()) {
+            var name = document.getElementById("name").value;
+            var amount = document.getElementById("amount").value;
+            var table = document.getElementById("table");
+            var row = table.insertRow(-1);
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            cell1.innerHTML = name;
+            cell2.innerHTML = amount;
+            document.getElementById("name").value = "";
+            document.getElementById("amount").value = "";
+        }
+    }
+
+    // Function to pick a random winner from the table and display the name and total amount
+    function pickWinner() {
+        var table = document.getElementById("table");
+        var rows = table.rows.length;
+        if (rows < 4) {
+            alert("Please register at least 3 users before picking a winner.");
+            return;
+        }
+        var winnerIndex = Math.floor(Math.random() * (rows - 1)) + 1; // Random number between 1 and rows-1
+        var winnerName = table.rows[winnerIndex].cells[0].innerHTML;
+        var totalAmount = 0;
+        for (var i = 1; i < rows; i++) {
+            totalAmount += parseInt(table.rows[i].cells[1].innerHTML);
+        }
+
+        document.getElementById("winner").innerHTML =
+            "The winner is " +
+            winnerName +
+            " and the total amount is " +
+            totalAmount +
+            " dollars.";
+    }
+</script>
+
+</html>
